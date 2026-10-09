@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حاسبة اليمن — صرف، زكاة، رواتب وأدوات يومية</title>
+<meta name="description" content="أدوات مالية ويومية لليمنيين — حاسبة الصرف (صنعاء/عدن)، الزكاة، الرواتب، تكلفة السفر. مجانية وبدون تسجيل.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Tahoma,sans-serif}
+body{background:#f4f6f9;color:#202124;line-height:1.6}
+nav{background:#fff;padding:12px 16px;box-shadow:0 2px 8px rgba(0,0,0,.05);position:sticky;top:0;z-index:100}
+.nav-in{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.logo{color:#1a73e8;font-weight:800;font-size:18px;text-decoration:none}
+.links{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.links a{color:#202124;text-decoration:none;padding:8px 12px;border-radius:8px;font-size:14px;font-weight:600;transition:.2s}
+.links a:hover{background:#e8f0fe;color:#1a73e8}
+.lang{background:#1a73e8;color:#fff;border:none;padding:8px 14px;border-radius:20px;font-weight:700;cursor:pointer;font-size:13px}
+.hero{background:linear-gradient(135deg,#1a73e8,#0d47a1);color:#fff;padding:36px 16px;text-align:center}
+.hero h1{font-size:26px;margin-bottom:8px}
+.hero p{opacity:.95;font-size:15px}
+.wrap{max-width:700px;margin:0 auto;padding:16px}
+.cats{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:18px 0}
+.cat{background:#fff;border:1px solid #dadce0;padding:8px 14px;border-radius:20px;cursor:pointer;font-size:13px;font-weight:600;color:#333;transition:.2s}
+.cat:hover{background:#e8f0fe;color:#1a73e8}
+.cat.active{background:#1a73e8;color:#fff;border-color:#1a73e8}
+.search{margin:14px 0}
+.search input{width:100%;padding:14px 18px;border:1px solid #dadce0;border-radius:30px;font-size:15px;outline:none;background:#fff}
+.search input:focus{border-color:#1a73e8;box-shadow:0 0 0 3px rgba(26,115,232,.1)}
+.card{background:#fff;padding:22px;border-radius:14px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.card h3{margin-bottom:6px;font-size:17px;color:#1a73e8}
+.desc{font-size:13px;color:#5f6368;margin-bottom:12px}
+label{display:block;font-size:13px;color:#333;font-weight:600;margin:10px 0 6px}
+input,select{width:100%;padding:12px;border:1px solid #dadce0;border-radius:10px;font-size:15px;background:#fafbfc;outline:none;transition:.2s}
+input:focus,select:focus{border-color:#1a73e8;background:#fff}
+.btn{width:100%;padding:14px;background:#1a73e8;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;margin-top:12px;transition:.2s}
+.btn:hover{background:#0d47a1}
+.result{display:none;margin-top:14px;padding:18px;background:linear-gradient(135deg,#1a73e8,#0d47a1);color:#fff;border-radius:12px;text-align:center}
+.result.show{display:block}
+.result .v{font-size:26px;font-weight:800;margin:6px 0}
+.result .d{font-size:12px;opacity:.9}
+.actions{display:flex;gap:8px;margin-top:12px}
+.actions button{flex:1;padding:10px;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px}
+.wa{background:#25D366;color:#fff}
+.cp{background:#fff;color:#1a73e8}
+.row{display:flex;gap:8px}
+.row>*{flex:1}
+.tabs{display:flex;gap:8px;margin:10px 0}
+.tab{flex:1;padding:10px;border:none;border-radius:10px;background:#eee;color:#333;font-weight:700;cursor:pointer;font-size:14px;transition:.2s}
+.tab.on{background:#1a73e8;color:#fff}
+.info{background:#e8f0fe;padding:16px;border-radius:12px;margin:14px 0}
+.info h4{color:#1a73e8;margin-bottom:8px;font-size:15px}
+.info p,.info li{font-size:13px;color:#333;line-height:1.8}
+.info ol{padding-right:18px}
+.section{background:#fff;padding:22px;border-radius:14px;margin-bottom:14px}
+.section h2{color:#1a73e8;font-size:18px;margin-bottom:10px}
+.section h3{color:#202124;font-size:15px;margin:14px 0 6px}
+.section p,.section li{font-size:14px;color:#333;line-height:1.9;margin-bottom:6px}
+.section ul{padding-right:20px}
+footer{background:#1a1a1a;color:#ccc;padding:24px 16px;text-align:center;font-size:13px;margin-top:20px}
+footer a{color:#8ab4f8;text-decoration:none;margin:0 8px}
+.page{display:none}
+.page.active{display:block}
+.note{font-size:12px;color:#888;text-align:center;margin-top:12px;line-height:1.7}
+@media(max-width:500px){.hero h1{font-size:22px}.links a{padding:6px 8px;font-size:13px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a href="#" class="logo" onclick="go('home');return false">🧮 حاسبة اليمن</a>
+    <div class="links">
+      <a href="#" onclick="go('home');return false" id="navHome">الرئيسية</a>
+      <a href="#" onclick="go('articles');return false" id="navArt">المقالات</a>
+      <a href="#" onclick="go('about');return false" id="navAbout">من نحن</a>
+      <a href="#" onclick="go('faq');return false" id="navFaq">الأسئلة</a>
+      <button class="lang" onclick="tg()" id="langBtn">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ الصفحة الرئيسية ═══ -->
+<div class="page active" id="p-home">
+  <div class="hero">
+    <h1 id="tHeroT">🧮 حاسبة اليمن</h1>
+    <p id="tHeroS">أدوات مالية ويومية لليمنيين — بدون تسجيل</p>
+  </div>
+
+  <div class="wrap">
+    <div class="cats">
+      <button class="cat active" onclick="fc('all',this)">الكل</button>
+      <button class="cat" onclick="fc('ex',this)">💱 صرف وعملة</button>
+      <button class="cat" onclick="fc('zk',this)">🕌 زكاة</button>
+      <button class="cat" onclick="fc('sal',this)">💼 رواتب</button>
+      <button class="cat" onclick="fc('trv',this)">✈️ سفر</button>
+      <button class="cat" onclick="fc('gen',this)">🧮 عامة</button>
+    </div>
+
+    <div class="search">
+      <input id="sb" placeholder="🔍 ابحث عن حاسبة..." oninput="fil()">
+    </div>
+
+    <div id="cc">
+
+      <!-- 💱 حاسبة الصرف اليمني -->
+      <div class="card" data-cat="ex" data-n="حاسبة الصرف اليمني exchange">
+        <h3>💱 حاسبة الصرف اليمني</h3>
+        <div class="desc">أسعار صنعاء وعدن — محدثة</div>
+
+        <div class="tabs">
+          <button class="tab on" data-c="sanaa" onclick="yCity('sanaa',this)">صنعاء</button>
+          <button class="tab" data-c="aden" onclick="yCity('aden',this)">عدن</button>
+        </div>
+
+        <label>المبلغ</label>
+        <input id="yamt" type="number" placeholder="مثال: 100" inputmode="decimal">
+
+        <div class="row">
+          <div>
+            <label>من</label>
+            <select id="yfrom">
+              <option value="YER">ريال يمني</option>
+              <option value="USD">دولار أمريكي</option>
+              <option value="SAR">ريال سعودي</option>
+            </select>
+          </div>
+          <div>
+            <label>إلى</label>
+            <select id="yto">
+              <option value="USD">دولار أمريكي</option>
+              <option value="SAR">ريال سعودي</option>
+              <option value="YER">ريال يمني</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn" onclick="yconv()">احسب الآن</button>
+
+        <div class="result" id="ybox">
+          <div class="d">الناتج</div>
+          <div class="v" id="yres">—</div>
+          <div class="d" id="yrate"></div>
+          <div class="actions">
+            <button class="wa" onclick="yShare()">📤 واتساب</button>
+            <button class="cp" onclick="yCopy()">📋 نسخ</button>
+          </div>
+        </div>
+        <div class="note">⚠️ الأسعار تقديرية وتتغير يومياً. تحقق من الصراف قبل التحويل.</div>
+      </div>
+
+      <!-- 🕌 حاسبة الزكاة -->
+      <div class="card" data-cat="zk" data-n="حاسبة الزكاة zakat">
+        <h3>🕌 حاسبة الزكاة بالريال اليمني</h3>
+        <div class="desc">احسب زكاة أموالك (2.5%)</div>
+
+        <div class="tabs">
+          <button class="tab on" data-c="sanaa" onclick="zCity('sanaa',this)">صنعاء</button>
+          <button class="tab" data-c="aden" onclick="zCity('aden',this)">عدن</button>
+        </div>
+
+        <label>النقود (ريال)</label>
+        <input id="zc" type="number" placeholder="0" inputmode="decimal">
+        <label>الذهب (جرام)</label>
+        <input id="zg" type="number" placeholder="0" inputmode="decimal">
+        <label>الفضة (جرام)</label>
+        <input id="zs" type="number" placeholder="0" inputmode="decimal">
+
+        <button class="btn" onclick="zakat()">احسب الزكاة</button>
+
+        <div class="result" id="zbox">
+          <div class="d">الزكاة الواجبة</div>
+          <div class="v" id="zres">—</div>
+          <div class="d" id="zd"></div>
+        </div>
+      </div>
+
+      <!-- 💼 حاسبة الراتب -->
+      <div class="card" data-cat="sal" data-n="حاسبة الراتب salary">
+        <h3>💼 حاسبة الراتب</h3>
+        <div class="desc">احسب صافي راتبك بعد الخصومات</div>
+
+        <label>الراتب الإجمالي (ريال)</label>
+        <input id="sal" type="number" placeholder="0" inputmode="decimal">
+        <label>نسبة الخصم (%)</label>
+        <input id="ded" type="number" placeholder="مثال: 10" inputmode="decimal">
+
+        <button class="btn" onclick="salary()">احسب الصافي</button>
+
+        <div class="result" id="sbox">
+          <div class="d">الراتب الصافي</div>
+          <div class="v" id="sres">—</div>
+          <div class="d" id="sd"></div>
+        </div>
+      </div>
+
+      <!-- ✈️ تكلفة السفر -->
+      <div class="card" data-cat="trv" data-n="تكلفة السفر travel">
+        <h3>✈️ حاسبة تكلفة السفر</h3>
+        <div class="desc">احسب مصاريف سفرك من اليمن</div>
+
+        <label>سعر التذكرة (دولار)</label>
+        <input id="tick" type="number" placeholder="0" inputmode="decimal">
+        <label>التأشيرة (دولار)</label>
+        <input id="visa" type="number" placeholder="0" inputmode="decimal">
+        <label>مصروف يومي (دولار)</label>
+        <input id="daily" type="number" placeholder="0" inputmode="decimal">
+        <label>عدد الأيام</label>
+        <input id="days" type="number" placeholder="7" inputmode="decimal">
+
+        <button class="btn" onclick="travel()">احسب التكلفة</button>
+
+        <div class="result" id="trbox">
+          <div class="d">إجمالي التكلفة</div>
+          <div class="v" id="trres">—</div>
+          <div class="d" id="trd"></div>
+        </div>
+      </div>
+
+      <!-- 🎂 العمر -->
+      <div class="card" data-cat="gen" data-n="حاسبة العمر age">
+        <h3>🎂 حاسبة العمر</h3>
+        <div class="desc">احسب عمرك بدقة</div>
+
+        <label>تاريخ الميلاد</label>
+        <input id="dob" type="date">
+
+        <button class="btn" onclick="age()">احسب العمر</button>
+
+        <div class="result" id="abox">
+          <div class="d">عمرك</div>
+          <div class="v" id="ares">—</div>
+        </div>
+      </div>
+
+      <!-- ⚖️ BMI -->
+      <div class="card" data-cat="gen" data-n="حاسبة كتلة الجسم bmi">
+        <h3>⚖️ حاسبة كتلة الجسم (BMI)</h3>
+        <div class="desc">اعرف إذا وزنك صحي</div>
+
+        <label>الوزن (كجم)</label>
+        <input id="w" type="number" placeholder="0" inputmode="decimal">
+        <label>الطول (سم)</label>
+        <input id="h" type="number" placeholder="0" inputmode="decimal">
+
+        <button class="btn" onclick="bmi()">احسب BMI</button>
+
+        <div class="result" id="bbox">
+          <div class="d">مؤشر كتلة الجسم</div>
+          <div class="v" id="bres">—</div>
+          <div class="d" id="bd"></div>
+        </div>
+      </div>
+
+      <!-- 🏦 القرض -->
+      <div class="card" data-cat="gen" data-n="حاسبة القرض loan">
+        <h3>🏦 حاسبة القرض</h3>
+        <div class="desc">احسب القسط الشهري</div>
+
+        <label>مبلغ القرض (ريال)</label>
+        <input id="la" type="number" placeholder="0" inputmode="decimal">
+        <label>نسبة الفائدة السنوية (%)</label>
+        <input id="lr" type="number" placeholder="0" inputmode="decimal">
+        <label>عدد الأشهر</label>
+        <input id="lm" type="number" placeholder="12" inputmode="decimal">
+
+        <button class="btn" onclick="loan()">احسب القسط</button>
+
+        <div class="result" id="lbox">
+          <div class="d">القسط الشهري</div>
+          <div class="v" id="lres">—</div>
+          <div class="d" id="ld"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="info">
+      <h4>📖 كيف تستخدم الموقع؟</h4>
+      <ol>
+        <li>اختر الحاسبة</li>
+        <li>أدخل البيانات</li>
+        <li>اضغط احسب</li>
+        <li>استخدم البحث للوصول السريع</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ صفحة المقالات ═══ -->
+<div class="page" id="p-articles">
+  <div class="hero">
+    <h1>📚 المقالات</h1>
+    <p>مقالات عن الصرف، الزكاة، الرواتب، والسفر</p>
+  </div>
+  <div class="wrap">
+    <div class="section">
+      <h2>💱 مقالات عن الصرف والعملة</h2>
+      <h3>ما الفرق بين سعر الصرف في صنعاء وعدن؟</h3>
+      <p>بسبب الانقسام المصرفي في اليمن، سعر الصرف يختلف بين المدن. في صنعاء يعتمد على السوق المحلي، وفي عدن يعتمد على البنك المركزي. لهذا كل تحويل لازم يحدد المدينة أولاً.</p>
+
+      <h3>كيف تعرف أفضل وقت لتحويل أموالك؟</h3>
+      <p>راقب السعر يومياً لمدة أسبوع، وسجّل التغيرات. عادة الأسعار ترتفع في بداية الشهر (وقت الرواتب) وتنخفض في نهايته. حاول التحويل في الأوقات الهادئة.</p>
+    </div>
+
+    <div class="section">
+      <h2>🕌 مقالات عن الزكاة</h2>
+      <h3>كيف تحسب زكاة المال بالريال اليمني؟</h3>
+      <p>الزكاة = 2.5% من المال إذا وصل النصاب (ما يعادل 85 جرام ذهب). احسب قيمة ذهبك ونقودك، وإذا وصلت النصاب، أخرج 2.5%.</p>
+
+      <h3>هل الزكاة على الذهب المستعمل؟</h3>
+      <p>نعم، إذا بلغ النصاب وحال عليه الحول. الذهب المستعمل للزينة فيه خلاف بين العلماء — الأحوط إخراج الزكاة.</p>
+    </div>
+
+    <div class="section">
+      <h2>💼 مقالات عن الرواتب</h2>
+      <h3>كيف تحسب صافي راتبك؟</h3>
+      <p>الراتب الصافي = الراتب الإجمالي − الخصومات (تأمينات، ضرائب، سلف). استخدم الحاسبة لمعرفة الصافي بسرعة.</p>
+    </div>
+
+    <div class="section">
+      <h2>✈️ مقالات عن السفر</h2>
+      <h3>كم تحتاج لمصاريف السفر من اليمن؟</h3>
+      <p>احسب: التذكرة + التأشيرة + الفيزا + المصروف اليومي × عدد الأيام + احتياطي 20%. الحاسبة تعطيك الرقم الكامل.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ صفحة من نحن ═══ -->
+<div class="page" id="p-about">
+  <div class="hero">
+    <h1>👋 من نحن</h1>
+    <p>حاسبة اليمن — أدوات مجانية لليمنيين</p>
+  </div>
+  <div class="wrap">
+    <div class="section">
+      <h2>هدفنا</h2>
+      <p>نقدم أدوات مالية ويومية مجانية لليمنيين داخل اليمن والمغتربين، بأسعار محدثة ونتائج فورية. كل شيء بدون تسجيل، بدون إعلانات مزعجة، وبدون تعقيد.</p>
+
+      <h2>ليش موقعنا مختلف؟</h2>
+      <ul>
+        <li>✅ متخصص لليمن — أسعار صنعاء وعدن منفصلة</li>
+        <li>✅ مجاني 100% — بدون تسجيل أو رسوم</li>
+        <li>✅ سريع — يشتغل على أي جوال</li>
+        <li>✅ بالعربية والإنجليزية</li>
+      </ul>
+
+      <h2>تواصل معنا</h2>
+      <p>عندك اقتراح أو تبي نضيف حاسبة؟ راسلنا على واتساب أو الإيميل.</p>
+      <p>📧 <strong>info@haseb-yemen.com</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ صفحة الأسئلة ═══ -->
+<div class="page" id="p-faq">
+  <div class="hero">
+    <h1>❓ الأسئلة الشائعة</h1>
+    <p>أجوبة لأكثر ما يسأل عنه الناس</p>
+  </div>
+  <div class="wrap">
+    <div class="section">
+      <h2>هل الأدوات مجانية؟</h2>
+      <p>نعم، 100% مجانية وبدون تسجيل. ما نطلب أي بيانات شخصية.</p>
+
+      <h2>كم مرة تتحدث أسعار الصرف؟</h2>
+      <p>نسعى لتحديثها يومياً. لكن ننصح دائماً بالتحقق من الصراف قبل التحويل الفعلي.</p>
+
+      <h2>هل النتائج دقيقة؟</h2>
+      <p>النتائج تقديرية وتصلح للتخطيط والمقارنة. للأمور الرسمية، راجع جهة مختصة.</p>
+
+      <h2>هل تنفع للمغتربين؟</h2>
+      <p>نعم، خصوصاً لليمنيين في السعودية والخليج — تحويل الأموال والزكاة وتكلفة السفر.</p>
+
+      <h2>كيف أكسب من الموقع؟</h2>
+      <p>لا نكسب حالياً. الموقع مجاني، ونخطط لإضافة إعلانات بسيطة تغطي تكاليف الاستضافة فقط.</p>
+
+      <h2>هل عندكم تطبيق جوال؟</h2>
+      <p>الموقع يشتغل على الجوال بشكل ممتاز، ويعطيك تجربة تطبيق. لا حاجة لتثبيت تطبيق.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>🧮 حاسبة اليمن © 2025</p>
+  <p style="margin-top:8px">
+    <a href="#" onclick="go('home');return false">الرئيسية</a>
+    <a href="#" onclick="go('articles');return false">المقالات</a>
+    <a href="#" onclick="go('about');return false">من نحن</a>
+    <a href="#" onclick="go('faq');return false">الأسئلة</a>
+  </p>
+</footer>
+
+<script>
+var $=function(i){return document.getElementById(i)};
+var lang=localStorage.getItem('hk_lang')||'ar';
+
+// ═══ أسعار الصرف — بدّلها يومياً ═══
+var YR={sanaa:{usd:530,sar:141},aden:{usd:1650,sar:440}};
+var yc='sanaa', zc='sanaa';
+
+// ═══ التنقل ═══
+function go(p){
+  document.querySelectorAll('.page').forEach(function(e){e.classList.remove('active')});
+  $('p-'+p).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ═══ اللغة ═══
+function tg(){
+  lang=lang==='ar'?'en':'ar';
+  localStorage.setItem('hk_lang',lang);
+  applyLang();
+}
+function applyLang(){
+  var ar=lang==='ar';
+  document.documentElement.dir=ar?'rtl':'ltr';
+  document.documentElement.lang=lang;
+  $('langBtn').textContent=ar?'EN':'ع';
+  $('navHome').textContent=ar?'الرئيسية':'Home';
+  $('navArt').textContent=ar?'المقالات':'Articles';
+  $('navAbout').textContent=ar?'من نحن':'About';
+  $('navFaq').textContent=ar?'الأسئلة':'FAQ';
+  $('tHeroT').textContent=ar?'🧮 حاسبة اليمن':'🧮 Yemen Calculator';
+  $('tHeroS').textContent=ar?'أدوات مالية ويومية لليمنيين — بدون تسجيل':'Financial tools for Yemenis — no signup';
+}
+
+// ═══ الفئات ═══
+function fc(c,el){
+  document.querySelectorAll('.cat').forEach(function(t){t.classList.remove('active')});
+  el.classList.add('active');
+  document.querySelectorAll('#cc .card').forEach(function(card){
+    card.style.display=(c==='all'||card.dataset.cat===c)?'block':'none';
+  });
+}
+function fil(){
+  var q=$('sb').value.toLowerCase().trim();
+  document.querySelectorAll('#cc .card').forEach(function(card){
+    var n=(card.dataset.n||'').toLowerCase();
+    card.style.display=(!q||n.indexOf(q)>-1)?'block':'none';
+  });
+}
+
+// ═══ حاسبة الصرف اليمني ═══
+function yCity(c,el){
+  yc=c;
+  document.querySelectorAll('#p-home .card[data-cat="ex"] .tab').forEach(function(t){
+    t.classList.remove('on');
+  });
+  el.classList.add('on');
+}
+function yconv(){
+  var amt=parseFloat($('yamt').value),f=$('yfrom').value,t=$('yto').value;
+  if(!amt||amt<=0){alert('أدخل مبلغ صحيح');return}
+  if(f===t){alert('اختر عملتين مختلفتين');return}
+  var r=YR[yc];
+  var toY=function(v,c){return c==='YER'?v:c==='USD'?v*r.usd:v*r.sar};
+  var frY=function(v,c){return c==='YER'?v:c==='USD'?v/r.usd:v/r.sar};
+  var res=frY(toY(amt,f),t);
+  var fmt=t==='YER'?Math.round(res).toLocaleString('en-US'):res.toFixed(2);
+  var sym={YER:'ريال يمني',USD:'دولار أمريكي',SAR:'ريال سعودي'};
+  $('yres').textContent=fmt+' '+sym[t];
+  $('yrate').textContent='1 دولار = '+r.usd.toLocaleString()+' ريال ('+(yc==='sanaa'?'صنعاء':'عدن')+')';
+  $('ybox').classList.add('show');
+}
+function yShare(){
+  var v=$('yres').textContent;
+  window.open('https://wa.me/?text='+encodeURIComponent('نتيجة التحويل: '+v+' 🇾🇪 من حاسبة اليمن'),'_blank');
+}
+function yCopy(){
+  navigator.clipboard.writeText($('yres').textContent);
+  alert('تم النسخ ✅');
+}
+
+// ═══ حاسبة الزكاة ═══
+function zCity(c,el){
+  zc=c;
+  document.querySelectorAll('#p-home .card[data-cat="zk"] .tab').forEach(function(t){t.classList.remove('on')});
+  el.classList.add('on');
+}
+function zakat(){
+  var cash=parseFloat($('zc').value)||0;
+  var gold=parseFloat($('zg').value)||0;
+  var silver=parseFloat($('zs').value)||0;
+  var rate=YR[zc];
+  var goldPrice=rate.usd*75;
+  var silverPrice=rate.usd*1;
+  var total=cash+(gold*goldPrice)+(silver*silverPrice);
+  var nisab=rate.usd*85*3;
+  if(total<nisab){
+    $('zres').textContent='أقل من النصاب';
+    $('zd').textContent='النصاب التقريبي: '+Math.round(nisab).toLocaleString()+' ريال';
+  } else {
+    var z=total*0.025;
+    $('zres').textContent=Math.round(z).toLocaleString()+' ريال';
+    $('zd').textContent='من إجمالي '+Math.round(total).toLocaleString()+' ريال';
+  }
+  $('zbox').classList.add('show');
+}
+
+// ═══ الراتب ═══
+function salary(){
+  var s=parseFloat($('sal').value);
+  var d=parseFloat($('ded').value)||0;
+  if(!s||s<=0){alert('أدخل الراتب');return}
+  var net=s-(s*d/100);
+  $('sres').textContent=Math.round(net).toLocaleString()+' ريال';
+  $('sd').textContent='الخصم: '+Math.round(s*d/100).toLocaleString()+' ريال ('+d+'%)';
+  $('sbox').classList.add('show');
+}
+
+// ═══ السفر ═══
+function travel(){
+  var t=parseFloat($('tick').value)||0;
+  var v=parseFloat($('visa').value)||0;
+  var d=parseFloat($('daily').value)||0;
+  var n=parseFloat($('days').value)||0;
+  if(!t&&!v&&!d){alert('أدخل بيانات السفر');return}
+  var total=t+v+(d*n);
+  var backup=total*0.2;
+  $('trres').textContent='$'+Math.round(total+backup).toLocaleString();
+  $('trd').textContent='الأساسي: $'+Math.round(total).toLocaleString()+' + احتياطي 20%';
+  $('trbox').classList.add('show');
+}
+
+// ═══ العمر ═══
+function age(){
+  var v=$('dob').value;
+  if(!v){alert('أدخل تاريخ الميلاد');return}
+  var b=new Date(v),now=new Date();
+  var y=now.getFullYear()-b.getFullYear();
+  var m=now.getMonth()-b.getMonth();
+  var d=now.getDate()-b.getDate();
+  if(d<0){m--;d+=30}
+  if(m<0){y--;m+=12}
+  $('ares').textContent=y+' سنة و '+m+' شهر';
+  $('abox').classList.add('show');
+}
+
+// ═══ BMI ═══
+function bmi(){
+  var w=parseFloat($('w').value);
+  var h=parseFloat($('h').value)/100;
+  if(!w||!h){alert('أدخل الوزن والطول');return}
+  var b=w/(h*h);
+  var s=b<18.5?'نقص وزن':b<25?'وزن صحي':b<30?'زيادة وزن':'سمنة';
+  $('bres').textContent=b.toFixed(1)+' — '+s;
+  $('bd').textContent='المؤشر العالمي لكتلة الجسم';
+  $('bbox').classList.add('show');
+}
+
+// ═══ القرض ═══
+function loan(){
+  var a=parseFloat($('la').value);
+  var r=parseFloat($('lr').value)/100/12;
+  var n=parseFloat($('lm').value);
+  if(!a||!n){alert('أدخل المبلغ وعدد الأشهر');return}
+  var monthly=r===0?a/n:a*r/(1-Math.pow(1+r,-n));
+  var total=monthly*n;
+  $('lres').textContent=Math.round(monthly).toLocaleString()+' ريال';
+  $('ld').textContent='إجمالي السداد: '+Math.round(total).toLocaleString()+' ريال';
+  $('lbox').classList.add('show');
+}
+
+// ═══ تشغيل ═══
+applyLang();
+</script>
+
+</body>
+  </html>
